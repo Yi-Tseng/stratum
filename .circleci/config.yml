@@ -77,6 +77,7 @@ jobs:
   unit_tests:
     docker:
       - image: stratumproject/build:build
+    resource_class: xlarge
     steps:
       - checkout
       - *restore_bazel_cache
@@ -95,6 +96,7 @@ jobs:
   cdlang_tests:
     docker:
       - image: stratumproject/build:build
+    resource_class: xlarge
     steps:
       - checkout
       - *restore_bazel_cache
@@ -113,6 +115,7 @@ jobs:
   coverage:
     docker:
       - image: stratumproject/build:build
+    resource_class: xlarge
     steps:
       - checkout
       - *restore_bazel_cache
