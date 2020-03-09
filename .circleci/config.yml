@@ -131,10 +131,7 @@ jobs:
           command: apt update && apt install -y llvm
       - run:
           name: Run test and collect coverage data
-          command: xargs -a .circleci/test-targets.txt bazel coverage > /tmp/coverage_logs.txt
-      - run:
-          name: grep all coverag files
-          command: cat /tmp/coverage_logs.txt | grep coverage.dat
+          command: xargs -a .circleci/test-targets.txt bazel coverage
       - *analyze_bazel_profile
       - *store_bazel_profile
       - run:
