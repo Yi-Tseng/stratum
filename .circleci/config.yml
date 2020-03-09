@@ -134,14 +134,14 @@ jobs:
       - *analyze_bazel_profile
       - *store_bazel_profile
       - run:
-        name: Combine all reports
-        command: find bazel-testlogs/ -name coverage.dat | xargs llvm-profdata merge --output _coverage.dat
+          name: Combine all reports
+          command: find bazel-testlogs/ -name coverage.dat | xargs llvm-profdata merge --output _coverage.dat
       - run:
-        name: Convert coverage report to lcov
-        command: ./.circleci/convert_covs.sh
+          name: Convert coverage report to lcov
+          command: ./.circleci/convert_covs.sh
       - run:
-        name: Upload coverage report
-        command: bash <(curl -s https://codecov.io/bash) -f _coverage.lcov -X s3 -C $CIRCLE_SHA1
+          name: Upload coverage report
+          command: bash <(curl -s https://codecov.io/bash) -f _coverage.lcov -X s3 -C $CIRCLE_SHA1
       - *save_bazel_cache
 
   # Update images on Docker Hub
