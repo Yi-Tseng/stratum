@@ -132,11 +132,14 @@ jobs:
       - run:
           name: Run test and collect coverage data
           command: xargs -a .circleci/test-targets.txt bazel coverage
+      - run:
+          name: Combine all reports
+          command: find bazel-testlogs/ -name coverage.dat | xargs llvm-profdata merge --output _coverage.dat
       - *analyze_bazel_profile
       - *store_bazel_profile
       - run:
           name: Upload coverage report
-          command: bash <(curl -s https://codecov.io/bash) -f bazel-out/_coverage/_coverage_report.dat -X s3 -C $CIRCLE_SHA1
+          command: bash <(curl -s https://codecov.io/bash) -f _coverage.dat -X s3 -C $CIRCLE_SHA1
       - *save_bazel_cache
 
   # Update images on Docker Hub
