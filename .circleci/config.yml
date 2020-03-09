@@ -111,18 +111,30 @@ jobs:
           command: xargs -a .circleci/cdlang-targets.txt bazel test
       - *save_bazel_cache
 
+      #BAZEL_USE_LLVM_NATIVE_COVERAGE=1 GCOV=/usr/bin/llvm-profdata
   # Generate coverage report and upload to codecov.io.
   coverage:
     docker:
       - image: stratumproject/build:build
     resource_class: xlarge
+    environment:
+      - BAZEL_USE_LLVM_NATIVE_COVERAGE: 1
+      - GCOV: /usr/bin/llvm-profdata
+      - CC: clang
+      - CXX: clang++
     steps:
       - checkout
       - *restore_bazel_cache
       - *set_bazelrc
       - run:
+          name: Set up llvm toolchain
+          command: apt update && apt install -y llvm
+      - run:
           name: Run test and collect coverage data
-          command: xargs -a .circleci/test-targets.txt bazel coverage
+          command: xargs -a .circleci/test-targets.txt bazel coverage > /tmp/coverage_logs.txt
+      - run:
+          name: grep all coverag files
+          command: cat /tmp/coverage_logs.txt | grep coverage.dat
       - *analyze_bazel_profile
       - *store_bazel_profile
       - run:
@@ -192,10 +204,10 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - unit_tests
-      - cdlang_tests
+      # - unit_tests
+      # - cdlang_tests
       - coverage
-      - cpp-style-check
+      # - cpp-style-check
   docker-publish:
     jobs:
       - publish-docker-build:
