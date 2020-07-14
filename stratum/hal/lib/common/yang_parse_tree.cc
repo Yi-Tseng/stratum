@@ -136,7 +136,7 @@ void YangParseTree::SendNotification(const GnmiEventPtr& event) {
     const ConfigHasBeenPushedEvent& change) {
   absl::WriterMutexLock r(&root_access_lock_);
   // Make sure we clear the tree before we add new nodes.
-  root_.children_.clear();
+  // root_.children_.clear();
 
   // Add the minimum nodes:
   //   /interfaces/interface[name=*]/state/ifindex
